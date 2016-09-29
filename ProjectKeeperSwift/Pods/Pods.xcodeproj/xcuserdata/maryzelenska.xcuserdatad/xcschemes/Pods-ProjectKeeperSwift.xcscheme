@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5869C4A61D92722E002A8180"
-               BuildableName = "ProjectKeeperSwift.app"
-               BlueprintName = "ProjectKeeperSwift"
-               ReferencedContainer = "container:ProjectKeeperSwift.xcodeproj">
+               BlueprintIdentifier = "A79D3B91FEBBDBF976E05DC182A3F110"
+               BuildableName = "Pods_ProjectKeeperSwift.framework"
+               BlueprintName = "Pods-ProjectKeeperSwift"
+               ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,15 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5869C4A61D92722E002A8180"
-            BuildableName = "ProjectKeeperSwift.app"
-            BlueprintName = "ProjectKeeperSwift"
-            ReferencedContainer = "container:ProjectKeeperSwift.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
@@ -51,16 +42,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5869C4A61D92722E002A8180"
-            BuildableName = "ProjectKeeperSwift.app"
-            BlueprintName = "ProjectKeeperSwift"
-            ReferencedContainer = "container:ProjectKeeperSwift.xcodeproj">
+            BlueprintIdentifier = "A79D3B91FEBBDBF976E05DC182A3F110"
+            BuildableName = "Pods_ProjectKeeperSwift.framework"
+            BlueprintName = "Pods-ProjectKeeperSwift"
+            ReferencedContainer = "container:Pods.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -70,16 +60,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5869C4A61D92722E002A8180"
-            BuildableName = "ProjectKeeperSwift.app"
-            BlueprintName = "ProjectKeeperSwift"
-            ReferencedContainer = "container:ProjectKeeperSwift.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
