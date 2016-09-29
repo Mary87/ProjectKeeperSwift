@@ -16,7 +16,7 @@ class Project: NSObject {
     let projectName: String
     let releaseYear: Int
     let projectDescription: String
-    let thumbnailImageUrl: String
+    let thumbnailImageUrlString: String
     let clientId: String
     let solutionTypes: [String]
     let technologies: [String]
@@ -35,14 +35,14 @@ class Project: NSObject {
             return nil
         }
         
-        self.projectId = String(id)
+        self.projectId = String(id!)
         self.projectName = parametersDictionary["name"] as? String ?? ""
         self.releaseYear = parametersDictionary["year"] as? Int ?? 0
         self.projectDescription = parametersDictionary["description"] as? String ?? ""
-        self.clientId = parametersDictionary["clientId"] as? String ?? ""
+        self.clientId = String(parametersDictionary["clientId"] as? Int)
         
         let imageDictionary = parametersDictionary["image"] as? Dictionary<String, AnyObject>
-        self.thumbnailImageUrl = imageDictionary!["url"] as? String ?? ""
+        self.thumbnailImageUrlString = imageDictionary!["url"] as? String ?? ""
         
         self.solutionTypes = parametersDictionary["solutionTypes"] as? Array<String> ?? []
         self.supportedScreens = parametersDictionary["supportedScreens"] as? Array<String> ?? []

@@ -16,13 +16,11 @@ protocol WebDataServiceProtocol {
 
 class WebDataService: WebDataServiceProtocol {
     
-    static let sharedInstance = WebDataService()
-    
-    private init () {
-    }
+    // MARK: WebDataServiceProtocol
     
     func getDataFromUrl(url:String, onComplete:(NSData)? -> (Void)) {
-        let url = NSURL(string: url)
+        let saveUrl = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+        let url = NSURL(string: saveUrl!)
         let urlRequest = NSMutableURLRequest(URL: url!, cachePolicy: .ReloadIgnoringLocalAndRemoteCacheData, timeoutInterval: 15.0)
         urlRequest.HTTPMethod = "GET"
         
@@ -37,8 +35,8 @@ class WebDataService: WebDataServiceProtocol {
             }
             else {
                 print(String(self) + ": Loading FINISHED from url \(url).")
+                onComplete(data)
             }
-            onComplete(data)
         }
         print(String(self) + ": Loading STARTED for ulr \(url) ")
         tast.resume()

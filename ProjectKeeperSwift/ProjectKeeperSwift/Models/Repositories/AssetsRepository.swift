@@ -15,15 +15,11 @@ protocol AssetsRepositoryProtocol {
 }
 
 class AssetsRepository: BaseRepository, AssetsRepositoryProtocol {
-    
-    // MARK: Properties
 
-    
-
-    // MARK: Public
+    // MARK: AssetsRepositoryProtocol
     
     func loadAssetsForProjectWithId(projectId: String, onComplete: ([Asset]) -> (Void))  {
-        let urlString = self.environment.projectsUrl.stringByReplacingOccurrencesOfString("{ID}", withString: projectId)
+        let urlString = self.environment.relatedAssetsUrl.stringByReplacingOccurrencesOfString("{ID}", withString: projectId)
         webDataService.getDataFromUrl(urlString) { (jsonData) -> (Void) in
             onComplete(self.extractAssetsFromData(jsonData))
         }
@@ -46,7 +42,7 @@ class AssetsRepository: BaseRepository, AssetsRepositoryProtocol {
             }
         }
         catch {
-            print(String(self) + ": Error \(error) occured when extracting projects from JSON")
+            print(String(self) + ": Error \(error) occured when extracting assets from JSON")
         }
         
         return assetsArray

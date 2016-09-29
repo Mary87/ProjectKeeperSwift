@@ -13,9 +13,9 @@ class Client: NSObject {
     // MARK: Properties
     
     let clientId: String
-    let clientName: String
-    let clientDescription: String
-    let webSiteUrl: String
+    let clientName: String?
+    let clientDescription: String?
+    let webSiteUrl: String?
     
 
     
@@ -28,8 +28,8 @@ class Client: NSObject {
         }
         
         self.clientId = String(id)
-        self.clientName = parametersDictionary["name"] as? String ?? ""
-        self.clientDescription = parametersDictionary["description"] as? String ?? ""
+        self.clientName = parametersDictionary["name"] as? String
+        self.clientDescription = parametersDictionary["description"] as? String
         self.webSiteUrl = parametersDictionary["url"] as? String ?? ""
     }
 }

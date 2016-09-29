@@ -19,7 +19,7 @@ class Asset: NSObject {
     
     // MARK: Properties
     
-    let contentUrl: String
+    let contentUrlString: String
     let assetType: AssetType
     
     
@@ -32,7 +32,7 @@ class Asset: NSObject {
             return nil
         }
         
-        self.contentUrl = url!
+        self.contentUrlString = url!
         if let type = parametersDictionary["type"] as? String, let associatedType = AssetType(rawValue: type) {
             self.assetType = associatedType
         }

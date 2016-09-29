@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Objection
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

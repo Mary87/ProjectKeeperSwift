@@ -16,25 +16,12 @@ protocol ProjectsRepositoryProtocol {
 
 class ProjectsReprository: BaseRepository, ProjectsRepositoryProtocol {
     
-    // MARK: Properties
-    
-    static let sharedRepository = ProjectsReprository()
-    
-    
-    
-    // MARK: Public
+    // MARK: ProjectsRepositoryProtocol
     
     func loadProjects(onComplete: ([Project]) -> (Void)) {
         let projectsUrl = environment.projectsUrl
         webDataService.getDataFromUrl(projectsUrl) { (jsonData) -> (Void) in
             onComplete(self.extractProjectsFromData(jsonData))
-        }
-    }
-    
-    func loadImageForProject(project:Project, onComplete: (UIImage) -> (Void)) {
-        let imageUrlString = project.thumbnailImageUrl
-        webDataService.getDataFromUrl(imageUrlString) { (data) -> (Void) in
-            onComplete(self.extractImageFromData(data))
         }
     }
     
@@ -60,12 +47,5 @@ class ProjectsReprository: BaseRepository, ProjectsRepositoryProtocol {
         
         return projectsArray
     }
-    
-    private func extractImageFromData(imageData: NSData?) -> UIImage {
-        let image = UIImage(data:imageData!,scale:1.0)!
-        return image
-    }
-    
-    
     
 }

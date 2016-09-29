@@ -7,62 +7,31 @@
 //
 
 import UIKit
-import Objection
 
 protocol ProjectsManagerProtocol {
     
     func loadProjects(onComplete: ([Project]?) -> ())
-    func updateProjectWithAssets(project: Project, onComplete: (Project) -> ())
-    func updateProjectWithClient(project: Project, onComplete: (Project) -> ())
-    func loadImageForProject(project:Project, onComplete: (UIImage) -> (Void))
 
 }
 
-class ProjectsManager: NSObject, ProjectsManagerProtocol {
-    
-    static let sharedManager = ProjectsManager()
+class ProjectsManager: BaseManager, ProjectsManagerProtocol {
     
     // MARK: Properties
     
-    let projectsRepository = ProjectsReprository()
-    let assetsRepository = AssetsRepository()
-    let clientsRepository = ClientsRepository()
+    let projectsRepository = InstancesFabric.projectsRepository()
     
     
     
-    // MARK: Initializers
-    
-    // MARK: Public
+    // MARK: ProjectsManagerProtocol
     
     func loadProjects(onComplete: ([Project]?) -> ()) {
         return projectsRepository.loadProjects({ (projects) -> (Void) in
-            onComplete(projects)
+            dispatch_async(dispatch_get_main_queue(), {
+                onComplete(projects)
+            })
         })
     }
     
-    func updateProjectWithAssets(project: Project, onComplete: (Project) -> ()) {
-        assetsRepository.loadAssetsForProjectWithId(project.projectId, onComplete: { (assets) -> (Void) in
-            project.assets = assets
-            onComplete(project)
-        })
-    }
-    
-    func updateProjectWithClient(project: Project, onComplete: (Project) -> ()) {
-        clientsRepository.loadClients({ (clients) -> (Void) in
-            for client in clients {
-                if client.clientId == project.clientId {
-                    project.client =  client
-                    onComplete(project)
-                }
-            }
-        })
-    }
-    
-    func loadImageForProject(project:Project, onComplete: (UIImage) -> (Void)) {
-        return projectsRepository.loadImageForProject(project, onComplete: { (image) -> (Void) in
-            onComplete(image)
-        })
-    }
-    
-    
+
+
 }

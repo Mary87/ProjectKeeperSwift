@@ -8,10 +8,12 @@
 
 import UIKit
 
-class ProjectDetailsViewController: UIViewController, ProjectDetailsLayoutViewControllerDelegate {
+class ProjectDetailsViewController: BaseViewController, ProjectDetailsLayoutViewControllerDelegate {
     
     private let layoutVCPresentationSegue = "layoutVCPresentationSegue"
-    private var projectsManager = ProjectsManager.sharedManager
+    
+    private var clientsManager = InstancesFabric.clientsManager()
+    private var assetsManager = InstancesFabric.assetsManager()
     var layoutVC: ProjectDetailsLayoutViewController!
     var currentProject: Project!
     
@@ -21,7 +23,13 @@ class ProjectDetailsViewController: UIViewController, ProjectDetailsLayoutViewCo
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadAdditionalDetailsForProject(self.currentProject)
+        loadAdditionalDetailsForProject(self.currentProject) { (loadingFinished, project) in
+            if loadingFinished {
+                self.currentProject = project
+                self.layoutVC.updateWithProject(project)
+            }
+        }
+        loadThumbnailImageForProject(self.currentProject)
     }
 
     override func didReceiveMemoryWarning() {
@@ -37,25 +45,49 @@ class ProjectDetailsViewController: UIViewController, ProjectDetailsLayoutViewCo
          if segue.identifier == layoutVCPresentationSegue {
             self.layoutVC = segue.destinationViewController as! ProjectDetailsLayoutViewController
             self.layoutVC.layoutDelegate = self
-            self.layoutVC.currentProject = self.currentProject
         }
      }
 
+    
+    
+    // MARK: ProjectDetailsLayoutViewControllerDelegate
+    
+    func loadImageForAsset(asset: Asset, onComplete: (UIImage) -> ()) {
+        webImageLoader.loadImageForAsset(asset) { (image) in
+            onComplete(image)
+        }
+    }
+    
  
  
     // MARK: Private
  
-    private func loadAdditionalDetailsForProject(project: Project) -> () {
-        projectsManager.updateProjectWithClient(project) { (project) in
+    private func loadAdditionalDetailsForProject(project: Project, withCompletion comeletion:(Bool, Project) -> ()) -> () {
+        var clientsUpdateFinished = false
+        var assetsUpdateFinished = false
+        
+        clientsManager.loadClientForProject(project) { (project) in
             dispatch_async(dispatch_get_main_queue(), {
-                self.layoutVC.updateWithProject(project)
+                clientsUpdateFinished = true
+                if clientsUpdateFinished && assetsUpdateFinished {
+                    comeletion(true, project)
+                }
             })
         }
         
-        projectsManager.updateProjectWithClient(project) { (project) in
+        assetsManager.loadAssetsForProject(project) { (project) in
             dispatch_async(dispatch_get_main_queue(), {
-                self.layoutVC.updateWithProject(project)
+                assetsUpdateFinished = true
+                if clientsUpdateFinished && assetsUpdateFinished {
+                    comeletion(true, project)
+                }
             })
+        }
+    }
+    
+    private func loadThumbnailImageForProject(project: Project) -> () {
+        webImageLoader.loadThumbnailImageForProject(project) { (image) in
+            self.layoutVC.updateWithProjectThumbnailImage(image)
         }
     }
 
