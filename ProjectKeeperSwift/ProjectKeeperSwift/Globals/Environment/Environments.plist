@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>apiProjectAssets</key>
+	<string>http://91.250.82.77:8081/3ssdemo/prj/json/galleryAssets.php?projectId={ID}</string>
+	<key>apiClients</key>
+	<string>http://91.250.82.77:8081/3ssdemo/prj/json/clients.php</string>
+	<key>apiProjectsList</key>
+	<string>http://91.250.82.77:8081/3ssdemo/prj/json/projects.php</string>
+</dict>
+</plist>
