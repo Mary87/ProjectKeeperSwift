@@ -10,7 +10,7 @@ import UIKit
 
 let slideAssetCollectionViewCellReuseId = "slideAssetCollectionViewCellReuseId"
 
-protocol SlideAssetCollectionViewCellDelegate {
+protocol SlideAssetCollectionViewCellDelegate: class {
     
     func loadImageForAsset(asset: Asset, onComplete:(UIImage) -> ())
 
@@ -20,10 +20,10 @@ class SlideAssetCollectionViewCell: UICollectionViewCell {
     
     // MARK: Properties
 
-    var delegate: SlideAssetCollectionViewCellDelegate?
-    var currentAsset: Asset?
+    weak var delegate: SlideAssetCollectionViewCellDelegate?
+    private(set) var currentAsset: Asset?
     
-    @IBOutlet weak var assetThumbnailImageView: UIImageView!
+    @IBOutlet private weak var assetThumbnailImageView: UIImageView!
     
     
     

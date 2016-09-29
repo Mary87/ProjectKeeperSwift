@@ -8,7 +8,7 @@
 
 import UIKit
 
-protocol ProjectsLayoutViewControllerDelegate {
+protocol ProjectsLayoutViewControllerDelegate: class {
     
     func loadThumbnailImageForProject(project: Project, onComplete:(UIImage) -> (Void))
     func tableViewDidSelectProject(project: Project) -> ()
@@ -24,7 +24,7 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
     private var dummyCell = ProjectTableViewCell()
     private var projects = [Project]()
     
-    var layoutDelegate: ProjectsLayoutViewControllerDelegate!
+    weak var layoutDelegate: ProjectsLayoutViewControllerDelegate!
    
     
     
@@ -33,6 +33,10 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
+        
+        if !projects.isEmpty {
+            refreshWithProjects(projects)
+        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -46,38 +50,9 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
     
     func updateWithProjects(projects: [Project]) -> () {
         self.projects = projects
-        tableView.reloadData()
-    }
-    
-    
-    
-    // MARK: UITableViewDataSource
-    
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return projects.count
-    }
-    
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
-    }
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let project = projects[indexPath.row]
-        let cell = ProjectTableViewCell.projectTableViewCellWith(project, delegate: self, indexPath: indexPath, tableView: tableView)
-        return cell
-    }
-    
-    
-    
-    // MARK: UITableViewDelegate
-    
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return dummyCell.frame.height
-    }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let selectedProject = projects[indexPath.row]
-        layoutDelegate.tableViewDidSelectProject(selectedProject)
+        
+        guard isViewLoaded() else { return }
+        refreshWithProjects(projects)
     }
     
     
@@ -101,4 +76,35 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
 
     }
     
+    private func refreshWithProjects(projects: [Project]) {
+        tableView.reloadData()
+    }
+}
+
+
+
+extension ProjectsLayoutViewController { // UITableViewDataSource & UITableViewDelegate
+    
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return projects.count
+    }
+    
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let project = projects[indexPath.row]
+        let cell = ProjectTableViewCell.projectTableViewCellWith(project, delegate: self, indexPath: indexPath, tableView: tableView)
+        return cell
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return dummyCell.frame.height
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let selectedProject = projects[indexPath.row]
+        layoutDelegate.tableViewDidSelectProject(selectedProject)
+    }
 }

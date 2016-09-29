@@ -81,7 +81,7 @@ class ProjectTableViewCell: UITableViewCell {
     class func projectTableViewCellWith(project: Project, delegate:ProjectTableViewCellDelegate, indexPath: NSIndexPath, tableView: UITableView) -> (ProjectTableViewCell) {
         let cell = tableView.dequeueReusableCellWithIdentifier(projectTableViewCellReuseId, forIndexPath: indexPath) as! ProjectTableViewCell
         cell.delegate = delegate
-        cell.updateWith(Project: project)
+        cell.updateWithProject(project)
         return cell
     }
 
@@ -89,7 +89,7 @@ class ProjectTableViewCell: UITableViewCell {
     
     // MARK: Private
     
-    private func updateWith(Project project: Project) -> () {
+    private func updateWithProject(project: Project) -> () {
         currentProject = project
         
         projectNameLabel.text = project.projectName

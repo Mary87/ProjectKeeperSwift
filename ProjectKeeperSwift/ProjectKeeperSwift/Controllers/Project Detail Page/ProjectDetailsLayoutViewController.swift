@@ -252,7 +252,7 @@ class ProjectDetailsLayoutViewController: BaseViewController, UICollectionViewDe
         if movieAssets.isEmpty {
             movieAssetsView.hidden = true
         }
-    }
+    } // TODO: split into several smaller funcs
 
     private func configureCollectionViews() {
         let slideAssetCell = SlideAssetCollectionViewCell.cellNib();

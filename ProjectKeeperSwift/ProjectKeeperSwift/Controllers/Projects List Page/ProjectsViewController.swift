@@ -8,11 +8,13 @@
 
 import UIKit
 
-class ProjectsViewController: BaseViewController, ProjectsLayoutViewControllerDelegate {
+class ProjectsViewController: BaseViewController {
+    private struct Const {
+        static let layoutVCPresentationSegue = "layoutVCPresentationSegue"
+    }
     
     // MARK: Properties
     
-    private let layoutVCPresentationSegue = "layoutVCPresentationSegue"
     private let projectsManager = InstancesFabric.projectsManager()
 
     private var layoutVC: ProjectsLayoutViewController!
@@ -38,27 +40,10 @@ class ProjectsViewController: BaseViewController, ProjectsLayoutViewControllerDe
     // MARK: Navigation
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == layoutVCPresentationSegue {
-            self.layoutVC = segue.destinationViewController as! ProjectsLayoutViewController
-            self.layoutVC.layoutDelegate = self
+        if segue.identifier == Const.layoutVCPresentationSegue {
+            layoutVC = segue.destinationViewController as! ProjectsLayoutViewController
+            layoutVC.layoutDelegate = self
         }
-    }
-    
-    
-    
-    // MARK: ProjectsLayoutViewControllerDelegate
-    
-    func loadThumbnailImageForProject(project: Project, onComplete: (UIImage) -> (Void)) {
-        webImageLoader.loadThumbnailImageForProject(project) { (image) in
-            onComplete(image)
-        }
-    }
-    
-    func tableViewDidSelectProject(project: Project) {
-        let detailsStoryboard = UIStoryboard.init(name: "ProjectDetails", bundle: nil)
-        let detailsVC = detailsStoryboard.instantiateViewControllerWithIdentifier("ProjectDetailsViewController") as! ProjectDetailsViewController
-        detailsVC.currentProject = project
-        self.navigationController?.pushViewController(detailsVC, animated: true)
     }
     
     
@@ -67,10 +52,10 @@ class ProjectsViewController: BaseViewController, ProjectsLayoutViewControllerDe
     
     private func updateWithProjects() {
         projectsManager.loadProjects { (projects) in
-            if projects != nil {
-                self.projects = projects!
-                self.layoutVC.updateWithProjects(projects!)
-            }
+            guard let projects = projects else { return }
+            
+            self.projects = projects
+            self.layoutVC.updateWithProjects(projects)
         }
     }
     
@@ -78,5 +63,25 @@ class ProjectsViewController: BaseViewController, ProjectsLayoutViewControllerDe
         view.backgroundColor = UIColor.blackColor()
         navigationItem.title = "Projects List"
     }
-
 }
+
+
+extension ProjectsViewController: ProjectsLayoutViewControllerDelegate {
+    
+    func loadThumbnailImageForProject(project: Project, onComplete: (UIImage) -> (Void)) {
+        webImageLoader.loadThumbnailImageForProject(project) { (image) in
+            onComplete(image)
+        }
+    }
+    
+    func tableViewDidSelectProject(project: Project) {
+        let detailsStoryboard = UIStoryboard(name: "ProjectDetails", bundle: nil)
+        let detailsVC = detailsStoryboard.instantiateViewControllerWithIdentifier("ProjectDetailsViewController") as! ProjectDetailsViewController
+        detailsVC.currentProject = project
+        navigationController?.pushViewController(detailsVC, animated: true)
+    }
+}
+
+
+
+

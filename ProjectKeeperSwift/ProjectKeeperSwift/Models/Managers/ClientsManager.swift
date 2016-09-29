@@ -31,7 +31,7 @@ class ClientsManager: BaseManager, ClientsManagerProtocol {
                     project.client =  client
                     onComplete(project)
                 }
-            }
+            } // TODO: make with .filter
         })
     }
 

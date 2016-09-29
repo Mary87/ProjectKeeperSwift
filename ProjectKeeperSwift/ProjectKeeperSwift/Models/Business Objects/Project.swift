@@ -10,7 +10,7 @@ import UIKit
 
 class Project: NSObject {
     
-    // MARK: Properties
+    // MARK: lets & vars
     
     let projectId: String
     let projectName: String
@@ -27,7 +27,7 @@ class Project: NSObject {
     
     
     
-    // MARK: Initializers
+    // MARK: lifecycle
     
     init?(parametersDictionary: Dictionary<String, AnyObject>) {
         let id = parametersDictionary["id"] as? Int
@@ -35,18 +35,18 @@ class Project: NSObject {
             return nil
         }
         
-        self.projectId = String(id!)
-        self.projectName = parametersDictionary["name"] as? String ?? ""
-        self.releaseYear = parametersDictionary["year"] as? Int ?? 0
-        self.projectDescription = parametersDictionary["description"] as? String ?? ""
-        self.clientId = String(parametersDictionary["clientId"] as? Int)
+        projectId = String(id!)
+        projectName = parametersDictionary["name"] as? String ?? ""
+        releaseYear = parametersDictionary["year"] as? Int ?? 0
+        projectDescription = parametersDictionary["description"] as? String ?? ""
+        clientId = String(parametersDictionary["clientId"] as? Int)
         
         let imageDictionary = parametersDictionary["image"] as? Dictionary<String, AnyObject>
-        self.thumbnailImageUrlString = imageDictionary!["url"] as? String ?? ""
+        thumbnailImageUrlString = imageDictionary!["url"] as? String ?? ""
         
-        self.solutionTypes = parametersDictionary["solutionTypes"] as? Array<String> ?? []
-        self.supportedScreens = parametersDictionary["supportedScreens"] as? Array<String> ?? []
-        self.technologies = parametersDictionary["technologies"] as? Array<String> ?? []
+        solutionTypes = parametersDictionary["solutionTypes"] as? Array<String> ?? []
+        supportedScreens = parametersDictionary["supportedScreens"] as? Array<String> ?? []
+        technologies = parametersDictionary["technologies"] as? Array<String> ?? []
     }
     
 }

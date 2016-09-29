@@ -14,8 +14,10 @@ class ProjectDetailsViewController: BaseViewController, ProjectDetailsLayoutView
     
     private var clientsManager = InstancesFabric.clientsManager()
     private var assetsManager = InstancesFabric.assetsManager()
-    var layoutVC: ProjectDetailsLayoutViewController!
-    var currentProject: Project!
+    private var layoutVC: ProjectDetailsLayoutViewController!
+    
+    var currentProject: Project! // TODO: make readonly
+    
     
     
 
@@ -24,6 +26,7 @@ class ProjectDetailsViewController: BaseViewController, ProjectDetailsLayoutView
     override func viewDidLoad() {
         super.viewDidLoad()
         loadAdditionalDetailsForProject(self.currentProject) { (loadingFinished, project) in
+            // TODO: guard
             if loadingFinished {
                 self.currentProject = project
                 self.layoutVC.updateWithProject(project)
@@ -43,8 +46,8 @@ class ProjectDetailsViewController: BaseViewController, ProjectDetailsLayoutView
 
      override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
          if segue.identifier == layoutVCPresentationSegue {
-            self.layoutVC = segue.destinationViewController as! ProjectDetailsLayoutViewController
-            self.layoutVC.layoutDelegate = self
+            layoutVC = segue.destinationViewController as! ProjectDetailsLayoutViewController
+            layoutVC.layoutDelegate = self
         }
      }
 

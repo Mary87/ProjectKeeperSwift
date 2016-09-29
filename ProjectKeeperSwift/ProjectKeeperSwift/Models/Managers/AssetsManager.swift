@@ -6,12 +6,12 @@
 //  Copyright © 2016 3ss. All rights reserved.
 //
 
-import UIKit
 
 protocol AssetsManagerProtocol {
     
     func loadAssetsForProject(project: Project, onComplete: (Project) -> ())
 }
+
 
 class AssetsManager: BaseManager, AssetsManagerProtocol {
     
