@@ -16,7 +16,7 @@ protocol ClientsRepositoryProtocol {
 
 class ClientsRepository: BaseRepository, ClientsRepositoryProtocol {
     
-    // MARK: Public
+    // MARK: ClientsRepositoryProtocol
     
     func loadClients(onComplete: ([Client]) -> (Void)) {
         let clientsUrl = environment.clientsUrl
@@ -42,7 +42,7 @@ class ClientsRepository: BaseRepository, ClientsRepositoryProtocol {
             }
         }
         catch {
-            print("Error with Json: \(error)")
+            print(String(self) + ": Error \(error) occured when extracting clients from JSON")
         }
         
         return clientsArray

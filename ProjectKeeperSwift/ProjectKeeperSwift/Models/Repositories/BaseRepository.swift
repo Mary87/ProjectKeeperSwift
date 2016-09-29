@@ -13,7 +13,6 @@ class BaseRepository: NSObject {
     // MARK: Properties
     
     let environment = Environment.sharedInstance
-    let webDataService = WebDataService.sharedInstance
+    let webDataService = InstancesFabric.webDataService()
 
-    
 }

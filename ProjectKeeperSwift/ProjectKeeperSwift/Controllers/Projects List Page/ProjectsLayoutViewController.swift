@@ -10,7 +10,7 @@ import UIKit
 
 protocol ProjectsLayoutViewControllerDelegate {
     
-    func loadImageForProject(project: Project, onComplete:(UIImage) -> (Void))
+    func loadThumbnailImageForProject(project: Project, onComplete:(UIImage) -> (Void))
     func tableViewDidSelectProject(project: Project) -> ()
     
 }
@@ -22,10 +22,10 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
     // MARK: Properties
     
     private var dummyCell = ProjectTableViewCell()
-    
-    var layoutDelegate: ProjectsLayoutViewControllerDelegate!
     private var projects = [Project]()
     
+    var layoutDelegate: ProjectsLayoutViewControllerDelegate!
+   
     
     
     // MARK: Lifecycle
@@ -44,7 +44,7 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
     
     // MARK: Public
     
-    func updateWith(projects: [Project]) -> () {
+    func updateWithProjects(projects: [Project]) -> () {
         self.projects = projects
         tableView.reloadData()
     }
@@ -63,8 +63,7 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let project = projects[indexPath.row]
-        
-        let cell = ProjectTableViewCell.projectTableViewCellWith(project, delegate:self, indexPath: indexPath, tableView: self.tableView)
+        let cell = ProjectTableViewCell.projectTableViewCellWith(project, delegate: self, indexPath: indexPath, tableView: tableView)
         return cell
     }
     
@@ -85,8 +84,8 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
     
     // MARK: ProgramTableViewCellDelegate
     
-    func loadImageForProject(project: Project, onComplete: (UIImage) -> ()) {
-        self.layoutDelegate.loadImageForProject(project) { (image) -> (Void) in
+    func loadThumbnailImageForProject(project: Project, onComplete: (UIImage) -> ()) {
+        self.layoutDelegate.loadThumbnailImageForProject(project) { (image) -> (Void) in
             onComplete(image)
         }
     }
@@ -96,9 +95,9 @@ class ProjectsLayoutViewController: UITableViewController, ProjectTableViewCellD
     // MARK: Private
     
     private func configureTableView() {
-        let tableViewCell = ProjectTableViewCell .cellNib();
+        let tableViewCell = ProjectTableViewCell.cellNib();
         self.dummyCell = tableViewCell.instantiateWithOwner(nil, options: nil).first as! ProjectTableViewCell
-        ProjectTableViewCell.registerInTableView(self.tableView)
+        ProjectTableViewCell.registerInTableView(tableView)
 
     }
     

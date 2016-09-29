@@ -8,12 +8,12 @@
 
 import UIKit
 
-class ProjectsViewController: UIViewController, ProjectsLayoutViewControllerDelegate {
+class ProjectsViewController: BaseViewController, ProjectsLayoutViewControllerDelegate {
     
     // MARK: Properties
     
     private let layoutVCPresentationSegue = "layoutVCPresentationSegue"
-    private let projectsManager = ProjectsManager.sharedManager
+    private let projectsManager = InstancesFabric.projectsManager()
 
     private var layoutVC: ProjectsLayoutViewController!
     private var projects = [Project]()
@@ -48,11 +48,9 @@ class ProjectsViewController: UIViewController, ProjectsLayoutViewControllerDele
     
     // MARK: ProjectsLayoutViewControllerDelegate
     
-    func loadImageForProject(project: Project, onComplete: (UIImage) -> (Void)) {
-        projectsManager.loadImageForProject(project) { (image) -> (Void) in
-            dispatch_async(dispatch_get_main_queue(), {
-                onComplete(image)
-            })
+    func loadThumbnailImageForProject(project: Project, onComplete: (UIImage) -> (Void)) {
+        webImageLoader.loadThumbnailImageForProject(project) { (image) in
+            onComplete(image)
         }
     }
     
@@ -71,16 +69,14 @@ class ProjectsViewController: UIViewController, ProjectsLayoutViewControllerDele
         projectsManager.loadProjects { (projects) in
             if projects != nil {
                 self.projects = projects!
-                dispatch_async(dispatch_get_main_queue(), {
-                    self.layoutVC.updateWith(projects!)
-                })
+                self.layoutVC.updateWithProjects(projects!)
             }
         }
     }
     
     private func setupAppearance() {
-        self.view.backgroundColor = UIColor.blackColor()
+        view.backgroundColor = UIColor.blackColor()
+        navigationItem.title = "Projects List"
     }
-    
-}
 
+}

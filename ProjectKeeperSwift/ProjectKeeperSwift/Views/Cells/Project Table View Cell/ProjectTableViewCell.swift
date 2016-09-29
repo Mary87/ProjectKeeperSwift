@@ -12,21 +12,23 @@ let projectTableViewCellReuseId = "projectTableViewCellReuseId"
 
 protocol ProjectTableViewCellDelegate {
     
-    func loadImageForProject(project: Project, onComplete:(UIImage) -> ())
+    func loadThumbnailImageForProject(project: Project, onComplete: (UIImage) -> ())
     
 }
+
+
 
 class ProjectTableViewCell: UITableViewCell {
     
     // MARK: Properties
     
+    @IBOutlet weak var cellContentView: UIView!
     @IBOutlet weak var projectImageView: UIImageView!
-    @IBOutlet weak var projectName: UILabel!
-    @IBOutlet weak var year: UILabel!
-    @IBOutlet weak var solutionTypes: UILabel!
-    @IBOutlet weak var projectImageWidthLayoutConstraint: NSLayoutConstraint!
+    @IBOutlet weak var projectNameLabel: UILabel!
+    @IBOutlet weak var releaseYearLabel: UILabel!
+    @IBOutlet weak var solutionTypesLabel: UILabel!
     
-    var currentProject:Project?
+    var currentProject: Project?
     var delegate: ProjectTableViewCellDelegate?
     
     
@@ -39,9 +41,21 @@ class ProjectTableViewCell: UITableViewCell {
     }
     
     override func prepareForReuse() {
-        projectName.text = nil
-        year.text = nil
-        projectImageView.image = UIImage(named: "project-placeholder-image")
+        projectNameLabel.text = nil
+        releaseYearLabel.text = nil
+        projectImageView.image = UIImage(named: "placeholder-image")
+        currentProject = nil
+    }
+    
+    override func setSelected(selected: Bool, animated: Bool) {
+        if selected {
+            cellContentView.backgroundColor = UIColor.init(red: 0.0/255.0, green: 140.0/255.0, blue: 185.0/255.0, alpha: 1)
+            projectNameLabel.textColor = UIColor.whiteColor()
+        }
+        else {
+            cellContentView.backgroundColor = UIColor.init(red: 30.0/255.0, green: 30.0/255.0, blue: 30.0/255.0, alpha: 1)
+            projectNameLabel.textColor = UIColor.init(red: 0.0/255.0, green: 140.0/255.0, blue: 185.0/255.0, alpha: 1)
+        }
     }
     
     
@@ -49,7 +63,14 @@ class ProjectTableViewCell: UITableViewCell {
     // MARK: Public
     
     class func cellNib() -> UINib {
-        return UINib.init(nibName: String(self), bundle: nil)
+        var nibName = String(self)
+        switch UIDevice.currentDevice().userInterfaceIdiom {
+        case .Pad:
+            nibName += "~iPad"
+        default:
+            nibName += "~iPhone"
+        }
+        return UINib.init(nibName: nibName, bundle: nil)
     }
     
     class func registerInTableView(tableView: UITableView) -> () {
@@ -70,18 +91,34 @@ class ProjectTableViewCell: UITableViewCell {
     
     private func updateWith(Project project: Project) -> () {
         currentProject = project
-        projectName.text = project.projectName
-        year.text = String(project.releaseYear)
         
-        let attributes = [NSFontAttributeName: UIFont(name: "HelveticaNeue-Medium", size: solutionTypes.font.pointSize)!, NSForegroundColorAttributeName: UIColor.whiteColor()]
-                          
-        let myString = NSMutableAttributedString(string: "Solution Types: ", attributes: attributes )
-        let attrString = NSAttributedString(string: project.solutionTypes.joinWithSeparator(", "))
+        projectNameLabel.text = project.projectName
         
-        myString.appendAttributedString(attrString)
+        // Configure Solution Types label.
         
-        solutionTypes.attributedText = myString
-        delegate?.loadImageForProject(project, onComplete: { (image) in
+        let solutionTypesAttributes = [NSFontAttributeName: UIFont(name: "HelveticaNeue-Medium", size: solutionTypesLabel.font.pointSize)!, NSForegroundColorAttributeName: UIColor.whiteColor()]
+        let solutionTypesAttrString = NSMutableAttributedString(string: "Solution Types: ", attributes: solutionTypesAttributes)
+
+        var joinedTypesAttrString = NSAttributedString(string: project.solutionTypes.joinWithSeparator(", "))
+        if UIDevice.currentDevice().userInterfaceIdiom != .Pad  {
+            joinedTypesAttrString = NSAttributedString(string: "\n" + joinedTypesAttrString.string)
+        }
+        solutionTypesAttrString.appendAttributedString(joinedTypesAttrString)
+        solutionTypesLabel.attributedText = solutionTypesAttrString
+        
+        // Configure Release Year label.
+        
+        let releaseYearAttributes = [NSFontAttributeName: UIFont(name: "HelveticaNeue-Medium", size: releaseYearLabel.font.pointSize)!, NSForegroundColorAttributeName: UIColor.whiteColor()]
+        let releaseYearAttrString = NSMutableAttributedString(string: "Release year ", attributes: releaseYearAttributes)
+        if project.releaseYear > 0 {
+            releaseYearAttrString.appendAttributedString(NSAttributedString.init(string: String(project.releaseYear)))
+        }
+        else {
+            releaseYearAttrString.appendAttributedString(NSAttributedString(string: "-"))
+        }
+        releaseYearLabel.attributedText = releaseYearAttrString
+        
+        delegate?.loadThumbnailImageForProject(project, onComplete: { (image) in
             if project == self.currentProject {
                 self.projectImageView.image = image
             }
@@ -89,11 +126,6 @@ class ProjectTableViewCell: UITableViewCell {
     }
     
     private func setupAppearance() {
-        switch UIDevice.currentDevice().userInterfaceIdiom {
-        case .Pad:
-            self.projectImageWidthLayoutConstraint.constant = 200
-        default:
-            self.projectImageWidthLayoutConstraint.constant = 100
-        }
+        self.selectionStyle = UITableViewCellSelectionStyle.None
     }
 }
